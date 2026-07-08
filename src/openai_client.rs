@@ -23,7 +23,7 @@ pub async fn generate_image(api_key: &str, prompt: &str) -> Result<String, Strin
     let client = reqwest::Client::new();
 
     let body = ImageRequest {
-        model: "gpt-image-1".to_string(),
+        model: "gpt-image-2".to_string(),
         prompt: prompt.to_string(),
         n: 1,
         size: "1024x1024".to_string(),
