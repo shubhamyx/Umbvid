@@ -13,3 +13,9 @@ reqwest = { version = "0.12", features = ["json"] }
 sqlx = { version = "0.7", features = ["postgres", "runtime-tokio", "uuid", "chrono","tls-rustls"] }
 uuid = { version = "1", features = ["v4", "serde"] }
 chrono = { version = "0.4", features = ["serde"] }
+jsonwebtoken="9"
+bcrypt="0.15"
+axum-extra = { version = "0.9", features = ["typed-header"] } 
+aws-sdk-s3="1"
+aws-config="1"
+base64="0.22"
