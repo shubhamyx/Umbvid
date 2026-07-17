@@ -1,3 +1,4 @@
+use base64::{engine::general_purpose::STANDARD, Engine};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize)]
@@ -15,11 +16,10 @@ struct ImageResponse {
 
 #[derive(Deserialize, Debug)]
 struct ImageData {
-    url: Option<String>,
     b64_json: Option<String>,
 }
 
-pub async fn generate_image(api_key: &str, prompt: &str) -> Result<String, String> {
+pub async fn generate_image(api_key: &str, prompt: &str) -> Result<Vec<u8>, String> {
     let client = reqwest::Client::new();
 
     let body = ImageRequest {
@@ -46,11 +46,12 @@ pub async fn generate_image(api_key: &str, prompt: &str) -> Result<String, Strin
 
     let first = parsed.data.get(0).ok_or("No image data returned")?;
 
-    if let Some(url) = &first.url {
-        Ok(url.clone())
-    } else if let Some(b64) = &first.b64_json {
-        Ok(format!("data:image/png;base64,{}", b64))
-    } else {
-        Err("No url or b64_json in response".to_string())
-    }
+    let b64 = first
+        .b64_json
+        .as_ref()
+        .ok_or("No b64_json in OpenAI response")?;
+
+    STANDARD
+        .decode(b64)
+        .map_err(|e| format!("failed to decode base64 image: {e}"))
 }
